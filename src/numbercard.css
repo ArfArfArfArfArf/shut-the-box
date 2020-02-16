@@ -1,0 +1,25 @@
+.numbercard {
+  border-radius: 1rem;
+  border: .25rem solid Green;
+  width: 3.5rem;
+  height: 6rem;
+  margin: .25rem;
+  padding: .5rem 0;
+  font-size: 3rem;
+  text-align: center;
+  background-image: url("wood-grain-texture.jpg");
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.unusable {
+  border: .25rem dashed Red;
+}
+
+.chosen {
+  border: .25rem solid Blue;
+}
+
+.used {
+  border: .25rem solid Black;
+  height: 3rem;
+}

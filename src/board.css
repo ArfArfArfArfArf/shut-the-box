@@ -1,0 +1,15 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.board_header {
+  margin: auto;
+}
+
+.board_numbers {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
