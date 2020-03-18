@@ -353,7 +353,6 @@ export default class App extends React.Component {
   scrollScores() {
     var objDivs = document.getElementsByClassName("App-scores");
     if (objDivs.length) {
-      console.log("WOOT");
       objDivs[0].scrollTop = objDivs[0].scrollHeight;
     }
   }
