@@ -5,6 +5,7 @@ import './board.css';
 
 export default class Board extends React.Component {
   static propTypes = {
+    numberOfDice: number.isRequired,
     currentRoll: number.isRequired,
     usedNumbers: arrayOf(number).isRequired,
     availableNumbers: arrayOf(number).isRequired,
@@ -55,7 +56,7 @@ export default class Board extends React.Component {
   renderNumbers() {
     let ret = []
     var i;
-    for(i = 1; i <= 12; i++) {
+    for(i = 1; i <= this.props.numberOfDice * 6; i++) {
       ret.push(this.renderNumber(i));
     }
 
@@ -80,11 +81,22 @@ export default class Board extends React.Component {
   getSum(total, num) {
     return total + num;
   }
+
+  getTotalAvailable() {
+    const num = this.props.numberOfDice * 6;
+    let i, total = 0;
+    
+    for(i = num; i > 0; i--) {
+      total = total + i;
+    }
+
+    return total;
+  }
   
   renderScore() {
     const usedNums = this.props.usedNumbers.reduce(this.getSum, 0);
     
-    return(<h2>Your Score: {78 - usedNums}</h2>);
+    return(<h2>Your Score: {this.getTotalAvailable() - usedNums}</h2>);
   }
   
   render() {

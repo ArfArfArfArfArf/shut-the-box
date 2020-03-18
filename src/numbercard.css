@@ -9,17 +9,21 @@
   text-align: center;
   background-image: url("wood-grain-texture.jpg");
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
 }
 
 .unusable {
   border: .25rem dashed Red;
+  cursor: auto;
 }
 
 .chosen {
   border: .25rem solid Blue;
+  cursor: pointer;
 }
 
 .used {
   border: .25rem solid Black;
   height: 3rem;
+  cursor: auto;
 }

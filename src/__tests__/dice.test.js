@@ -10,8 +10,10 @@ test('renders div for dice', () => {
 
 test('renders 2 dice', () => {
   const { getByTestId } = render(<App />);
-  const dice1 = getByTestId("dice1");
+  const dice1 = getByTestId("dice0");
   expect(dice1).toBeInTheDocument();
-  const dice2 = getByTestId("dice2");
+  const dice2 = getByTestId("dice1");
   expect(dice2).toBeInTheDocument();
 });
+
+

@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import Board from '../board';
 
 var defaultProps = {
+  numberOfDice: 2,
   currentRoll: 10,
   usedNumbers: [1,3,5],
   availableNumbers: [2,4,6,8,10],
@@ -49,6 +50,7 @@ test('updates parent with selected numbers when complete', () => {
   const fn = jest.fn();
   
   var props = {
+    numberOfDice: 2,
     currentRoll: 10,
     usedNumbers: [1,3,5],
     availableNumbers: [2,4,6,8,10],

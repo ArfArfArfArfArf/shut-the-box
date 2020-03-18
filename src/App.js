@@ -8,8 +8,8 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      die1Value: this.generateRandomNumber(),
-      die2Value: this.generateRandomNumber(),
+      numberOfDice: 2,
+      dieValues: [this.generateRandomNumber(), this.generateRandomNumber()],
       rollState: false,
       usedNumbers: [],
       scoreHistory: [],
@@ -25,8 +25,11 @@ export default class App extends React.Component {
     this.showHelp = this.showHelp.bind(this);
     this.showConfiguration = this.showConfiguration.bind(this);
     this.setShowScores = this.setShowScores.bind(this);
+    this.numberOfDiceChange = this.numberOfDiceChange.bind(this);
     
-    this.combinationSum(this.getUnusedNumbers(), (this.state.die1Value + this.state.die2Value) - this.getSelectedSum(this.state.selectedNumbers));
+    const dieValue = this.getSelectedSum(this.state.dieValues);
+    
+    this.combinationSum(this.getUnusedNumbers(), dieValue - this.getSelectedSum(this.state.selectedNumbers));
   }
 
   onSelect(value) {
@@ -48,14 +51,18 @@ export default class App extends React.Component {
   }
   
   reRoll() {
-    const die1 = this.generateRandomNumber();
-    const die2 = this.generateRandomNumber();
+    const values = [];
+
+    let i;
+
+    for (i = 0; i < this.state.numberOfDice; i++) {
+      values.push(this.generateRandomNumber());
+    }
     
     if (this.gameOver) {
       this.gameOver = false;
       this.setState((prevState) => ({
-	die1Value: die1,
-	die2Value: die2,
+	dieValues: values,
 	rollState: false,
 	usedNumbers: [],
 	selectedNumbers: [],
@@ -63,8 +70,7 @@ export default class App extends React.Component {
       }));
     } else {
       this.setState((prevState) => ({
-	die1Value: die1,
-	die2Value: die2,
+	dieValues: values,
 	rollState: false,
 	usedNumbers: prevState.usedNumbers.concat(prevState.selectedNumbers),
 	selectedNumbers: [],
@@ -76,7 +82,7 @@ export default class App extends React.Component {
     var ret = [];
     var i;
 
-    for(i = 1; i <= 12; i++) {
+    for(i = 1; i <= (this.state.numberOfDice * 6); i++) {
       if (!this.state.usedNumbers.includes(i) && !this.state.selectedNumbers.includes(i)) {
 	ret.push(i);
       }
@@ -165,9 +171,11 @@ export default class App extends React.Component {
   }
 
   canRoll() {
-    const { die1Value, die2Value, selectedNumbers } = this.state;
+    const { dieValues, selectedNumbers } = this.state;
+
+    const dieSum = this.getSelectedSum(dieValues);
     
-    if (this.getSelectedSum(selectedNumbers) === die1Value + die2Value || this.gameOver) {
+    if (this.getSelectedSum(selectedNumbers) === dieSum || this.gameOver) {
       return true;
     }
 
@@ -176,14 +184,20 @@ export default class App extends React.Component {
 
   renderRules() {
     if (this.state.showHelp) {
-      return("When the game starts, 2 dice are rolled.  You must select numbers from the board that add up to the total of the 2 dice.  Numbers outlined in red are not selectable.  Numbers in smaller black squares have already been used and are no longer selectable.  Numbers outlined in green are available.  Numbers outlined in blue are numbers you have already selected this round.  If you have selected a number and decide you do not want to use that number this round, click on it again to un-select it.  Once you have selected enough numbers to add up to the dice roll, the Roll button will appear, and you can roll the dice again, repeating the process.  If you are unable to select numbers to add up to the dice roll, your game is over and you score is the total of the unused numbers you have left.  If you are able to use all the nubers on the board, you have 'Shut the Box' - congratulations!");
+      return(
+	  <div className='App-help'>
+	    <h3>Game Rules:</h3>
+	  When the game starts, dice are rolled.  The number of dice rolled is controlled in the Configuration menu, and is 2 by default.  You must select numbers from the board that add up to the total of the dice.  Numbers outlined in red are not selectable.  Numbers in smaller black squares have already been used and are no longer selectable.  Numbers outlined in green are available.  Numbers outlined in blue are numbers you have already selected this round.  If you have selected a number and decide you do not want to use that number this round, click on it again to un-select it.  Once you have selected enough numbers to add up to the dice roll, the Roll button will appear, and you can roll the dice again, repeating the process.  If you are unable to select numbers to add up to the dice roll, your game is over and you score is the total of the unused numbers you have left.  If you are able to use all the nubers on the board, you have 'Shut the Box' - congratulations!
+	</div>
+      );
     } else {
       return null;
     }
   }
 
   dropDownClick() {
-    document.getElementById("myDropdown").classList.toggle("show");
+    document.getElementById("menu-container").classList.toggle("change");
+    document.getElementById("myDropdown").classList.toggle("open");
   }
 
   showHelp() {
@@ -215,40 +229,63 @@ export default class App extends React.Component {
       return "Show Configuration";
     }
   }
-  
+
   renderMenu() {
     return (
+      <div>
+	<div id="menu-container" className="menu-container" onClick={this.dropDownClick}>
+	  <div className="bar1"></div>
+	  <div className="bar2"></div>
+	  <div className="bar3"></div>
+	</div>
 	<div className="dropdown">
-    	  <button onClick={this.dropDownClick} className="dropbtn">Menu</button>
 	  <div id="myDropdown" className="dropdown-content">
 	    <span onClick={this.showHelp}>{this.getHelpText()}</span>
 	    <span onClick={this.showConfiguration}>{this.getConfigurationText()}</span>
 	  </div>
 	</div>
+      </div>
     );
   }
 
   setShowScores(event) {
     this.setState({ showScoreHistory: event.target.checked });
   }
+
+  numberOfDiceChange(event) {
+    let dieValues = [];
+    let i;
+
+    for(i = 0; i < event.target.value; i++) {
+      dieValues.push(this.generateRandomNumber());
+    }
+    
+    this.setState({ numberOfDice: parseInt(event.target.value), dieValues: dieValues});
+  }
   
   renderConfig() {
     const showScores = this.state.showScoreHistory ? '1' : '0';
-    const checked = this.state.showScoreHistory ? 'yes' : 'no';
+    const showScoresChecked = this.state.showScoreHistory ? true : false;
 
     return(
 	<div>
 	  <h3>Configuration</h3>
-      	  <input name='showScores' defaultChecked={checked} type='checkbox' onClick={this.setShowScores} value={showScores} />
+      	  <input name='showScores' defaultChecked={showScoresChecked} type='checkbox' onClick={this.setShowScores} value={showScores} />
   	  <label htmlFor='showScores'>Show score history</label>
+	  <p/>
+	  <label htmlFor='numberOfDice'>Number of dice: </label>
+	  <select id='numberOfDice' defaultValue={this.state.numberOfDice} onChange={this.numberOfDiceChange}>
+	    <option value='1'>1</option>
+	    <option value='2'>2</option>
+	    <option value='3'>3</option>
+	  </select>
 	</div>
     )
   }
 
   renderScoreHistory() {
     return(
-      <div>
-	<h3>Previous Scores:</h3>
+      <div data-testid="App-scores">
 	{this.state.scoreHistory.map((x, i) => {
 	  return(
 	      <div key={i}>{x}<br/></div>
@@ -258,7 +295,7 @@ export default class App extends React.Component {
   }
   
   render() {
-    this.combinationSum(this.getUnusedNumbers(), (this.state.die1Value + this.state.die2Value) - this.getSelectedSum(this.state.selectedNumbers));
+    this.combinationSum(this.getUnusedNumbers(), (this.getSelectedSum(this.state.dieValues) - this.getSelectedSum(this.state.selectedNumbers)));
 
     if (this.result.flat().length === 0 && this.state.selectedNumbers.length === 0)
       this.gameOver = true;
@@ -270,22 +307,17 @@ export default class App extends React.Component {
           </div>
           <div className="App-content">
     	    <Board
-              currentRoll={this.state.die1Value + this.state.die2Value}
+              currentRoll={this.getSelectedSum(this.state.dieValues)}
               usedNumbers={this.state.usedNumbers}
               availableNumbers={this.result.flat()}
               selectedNumbers={this.state.selectedNumbers}
               onSelect={this.onSelect}
+              numberOfDice={this.state.numberOfDice}
             />
-	    {this.state.showScoreHistory &&
-	     <div data-testid="App-scores" className="App-scores">
-  	       {this.renderScoreHistory()}
-             </div>
-	    }
 	  </div>
 	  <div data-testid="App-header" className="App-header">
   	    <Dice
-              die1Value={this.state.die1Value}
-              die2Value={this.state.die2Value}
+              dieValues={this.state.dieValues}
             />
 	    <button
               className="reroll_button"
@@ -304,6 +336,14 @@ export default class App extends React.Component {
 	      {this.renderConfig()}
             </div>
 	  )}
+          {this.state.showScoreHistory &&
+	   <div>
+  	     <h3>Previous Scores:</h3>
+	     <div>
+  	       {this.renderScoreHistory()}
+             </div>
+           </div>
+	  }
 	</div>
     );
   }

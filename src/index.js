@@ -10,11 +10,17 @@ serviceWorker.unregister();
 
 // get rid of the popup menu when the use clicks outside the menu
 window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
+  const { target } = event;
+  
+  if (!target.matches('.menu-container') && !target.matches('.bar1') && !target.matches('.bar2') && !target.matches('.bar3')) {
     let menu = document.getElementById("myDropdown");
-
-    if (menu.classList.contains('show')) {
-	menu.classList.toggle("show");
+    let container = document.getElementById("menu-container");
+    
+    if (menu.classList.contains('open')) {
+	menu.classList.toggle("open");
+    }
+    if (container.classList.contains('change')) {
+      container.classList.toggle("change");
     }
   }
 }
