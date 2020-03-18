@@ -32,6 +32,10 @@ export default class App extends React.Component {
     this.combinationSum(this.getUnusedNumbers(), dieValue - this.getSelectedSum(this.state.selectedNumbers));
   }
 
+  componentDidUpdate() {
+    this.scrollScores();
+  }
+  
   onSelect(value) {
     let selectedNumbers = [...this.state.selectedNumbers];
     
@@ -285,7 +289,7 @@ export default class App extends React.Component {
 
   renderScoreHistory() {
     return(
-      <div data-testid="App-scores">
+      <div data-testid="App-scores" className="App-scores">
 	{this.state.scoreHistory.map((x, i) => {
 	  return(
 	      <div key={i}>{x}<br/></div>
@@ -339,15 +343,21 @@ export default class App extends React.Component {
           {this.state.showScoreHistory &&
 	   <div>
   	     <h3>Previous Scores:</h3>
-	     <div>
-  	       {this.renderScoreHistory()}
-             </div>
+	     {this.renderScoreHistory()}
            </div>
 	  }
 	</div>
     );
   }
 
+  scrollScores() {
+    var objDivs = document.getElementsByClassName("App-scores");
+    if (objDivs.length) {
+      console.log("WOOT");
+      objDivs[0].scrollTop = objDivs[0].scrollHeight;
+    }
+  }
+  
   generateRandomNumber() {
     return Math.ceil(Math.random() * 6);
   }

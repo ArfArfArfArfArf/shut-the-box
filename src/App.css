@@ -1,3 +1,5 @@
+html,body { height:100%; overflow: hidden;}
+
 .App {
   display: flex;
   text-align: center;
@@ -58,14 +60,10 @@
 }
 
 .App-scores {
-  justify-content: center;
-  display: flex;
-  height: 12.5rem;
-  width: 18.75rem;
+  position: absolute;
+  left: 0; right: 0;
   overflow: auto;
-  border: 1px solid #666;
-  background-color: #ccc;
-  padding: .5rem;
+  height: calc(100vh - 22rem);
 }
 
 .App-help {
