@@ -246,6 +246,7 @@ export default class App extends React.Component {
 	  <div id="myDropdown" className="dropdown-content">
 	    <span onClick={this.showHelp}>{this.getHelpText()}</span>
 	    <span onClick={this.showConfiguration}>{this.getConfigurationText()}</span>
+	    <span><a target="_blank" rel="noopener noreferrer" href="https://github.com/ArfArfArfArfArf/shut-the-box">Source Code</a></span>
 	  </div>
 	</div>
       </div>
